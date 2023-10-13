@@ -6,14 +6,16 @@ const handle: HTMLElement = document.querySelector('div.handle') as HTMLElement,
 
 
 handle.onclick = async (): Promise<void> => {
-    const shouldConinue: boolean = await GAME.rollHandler(handle)
+    const shouldContinue: boolean = await GAME.rollHandler(handle)
 
-    if (!shouldConinue)
+    if (!shouldContinue)
         return
 
-        
-    const score = GAME.getCurrentScore()
-    GAME.calculateRoundResult(score)
+
+    const score: number[] = GAME.getCurrentScore()
+    const newMoney: number = GAME.calculateRoundResult(score)
+
+    GAME.resultPopup(newMoney)
 
     GAME.updateStatistics()
 }

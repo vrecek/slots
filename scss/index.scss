@@ -17,6 +17,27 @@ body {
 	width: 100vw;
 	overflow: hidden;
 
+	div.roll-result {
+		padding: 1em 3em;
+		background: #101010;
+		border-radius: .25em;
+		position: absolute;
+		transition: .5s;
+		left: 50%;
+		bottom: -100%;
+		font-size: 1.5rem;
+		transform: translateX(-50%);
+		animation: roll-result .5s;
+		animation-fill-mode: forwards;
+
+		&.red { color: red; }
+		&.green { color: greenyellow; }
+
+		@keyframes roll-result {
+			100% { bottom: .5em; }
+		}
+	}
+
 	main {
 		display: flex;
 		min-width: 800px;

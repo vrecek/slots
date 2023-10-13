@@ -1,3 +1,5 @@
+import { ScoreCount, ScoreValue } from "./interfaces/GameTypes"
+
 class Game {
     private imgs: string[]
 
@@ -14,10 +16,13 @@ class Game {
         this.imgs = [
             "../images/img0.png",
             "../images/img1.png",
-            "../images/img2.png"
+            "../images/img2.png",
+            "../images/img3.png",
+            "../images/img4.png",
+            "../images/img5.png",
         ]
 
-        this.possibleBets = [10, 50, 100]
+        this.possibleBets = [100, 500, 1000]
         this.currentBet = 0
         this.currentResult = []
 
@@ -31,6 +36,19 @@ class Game {
         return new Promise(r => setTimeout(r, ms))
     }
 
+    private getResultValue(score: string): number {
+        switch (score) {
+            case "0": return 10 // seven
+            case "1": return 5 // coin
+            case "2": return 1.75 // cherry
+            case "3": return 1.5 // banana
+            case "4": return 1.25 // zombie
+            case "5": return 2 // dog
+
+            default: return 0
+        }
+    }
+
 
 
     public async rollHandler(handle: HTMLElement): Promise<boolean> {
@@ -38,6 +56,8 @@ class Game {
             return false
 
         this.canRoll = false
+
+        document.querySelector('div.roll-result')?.remove()
 
         // Click animation
         handle.style.transform = 'rotateX(-180deg)'
@@ -92,12 +112,47 @@ class Game {
         return true
     }
 
-    public calculateRoundResult(score: number[]): void {
-        console.log(score)
-        this.money -= 50
+    public resultPopup(newMoney: number): void {
+        const div = document.createElement('div'),
+              hasWon: boolean = newMoney > 0
+
+        div.className = `roll-result ${ hasWon ? 'green' : 'red' }`
+        div.textContent = `${ hasWon ? `+${newMoney}` : newMoney }$`
+
+        document.body.appendChild(div)
+
+        setTimeout(() => div?.remove(), 2000)
+    }
+
+    public calculateRoundResult(score: number[]): number {
+        const scores: ScoreCount = {}
+
+        // Count the duplicates
+        for (const val of score)
+            scores[val] ? scores[val]++ : scores[val] = 1
+
+        // Search and return if the value is greater than 1
+        const winValue: ScoreValue = Object.entries(scores).filter(x => x[1] > 1)?.[0] ?? null
+
+        let moneyUpdate: number = -this.currentBet
+
+        if (winValue) {
+
+            // Get the "image's power"
+            const power: number = this.getResultValue(winValue[0])
+            
+            // Calculate the earned money
+            moneyUpdate = Math.trunc((winValue[1] + power) * (this.currentBet / 2))
+
+        }
+
+        this.money += moneyUpdate
+
+        return moneyUpdate
     }
 
     public getCurrentScore(): number[] {
+        // Converts image paths to a value (img4 = 4, img3 = 3, etc...)
         const nums: number[] = this.currentResult.map(x => parseInt(x.slice( x.indexOf('img') + 3, x.lastIndexOf('.')) ))
 
         return nums
