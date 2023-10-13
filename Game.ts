@@ -1,7 +1,14 @@
 class Game {
     private imgs: string[]
-    private count: number
+
+    private possibleBets: number[]
+    private currentBet: number
+    private currentResult: string[]
+
+    private money: number
+    
     private canRoll: boolean
+
 
     public constructor() {
         this.imgs = [
@@ -10,7 +17,11 @@ class Game {
             "../images/img2.png"
         ]
 
-        this.count = 1
+        this.possibleBets = [10, 50, 100]
+        this.currentBet = 0
+        this.currentResult = []
+
+        this.money = 1000
         this.canRoll = true
     }
 
@@ -22,9 +33,9 @@ class Game {
 
 
 
-    public async rollHandler(handle: HTMLElement): Promise<void> {
-        if (!this.canRoll)
-            return
+    public async rollHandler(handle: HTMLElement): Promise<boolean> {
+        if (!this.canRoll || !this.currentBet || this.money < this.currentBet)
+            return false
 
         this.canRoll = false
 
@@ -37,6 +48,8 @@ class Game {
 
         // One loop = MS + MS / 2 (ms = 50, loop = 75ms)
         for (let i = 0; i < 15; i++) {
+            this.currentResult = []
+
             wrapper.style.transition = `${MS}ms`
 
             const section: HTMLElement = document.createElement('section')
@@ -45,19 +58,21 @@ class Game {
             // Append a random image to each div
             for (let i = 0; i < 3; i++) {
                 const div: HTMLElement = document.createElement('div'),
-                      img: HTMLImageElement = document.createElement('img')
+                      img: HTMLImageElement = document.createElement('img'),
+                      src: string = this.imgs[Math.floor(Math.random() * this.imgs.length)]
 
-                img.src = this.imgs[Math.floor(Math.random() * this.imgs.length)]
+                img.src = src
 
                 div.appendChild(img)
                 section.appendChild(div)
+
+                this.currentResult.push(src)
             }
 
             wrapper.appendChild(section)
 
             // Make a rolling animation
             wrapper.style.transform = `translateY(-${100}%)`
-            this.count++
 
             
             // Use the sleep() func to correctly display the animation
@@ -73,6 +88,19 @@ class Game {
         }
 
         this.canRoll = true
+
+        return true
+    }
+
+    public calculateRoundResult(score: number[]): void {
+        console.log(score)
+        this.money -= 50
+    }
+
+    public getCurrentScore(): number[] {
+        const nums: number[] = this.currentResult.map(x => parseInt(x.slice( x.indexOf('img') + 3, x.lastIndexOf('.')) ))
+
+        return nums
     }
 
     public initHandle(handle: HTMLElement): void {
@@ -91,6 +119,45 @@ class Game {
 
             div.appendChild(img)
         }
+    }
+
+    public initBets(): void {
+        const bets: Element[] = [...document.querySelector('article.bet-article')!.children],
+              betSpans: Element[] = [...document.querySelectorAll('article.bet-article span')]
+
+
+        for (const [i, bet] of Object.entries(bets)) {
+
+            const betMoney: number = this.possibleBets[parseInt(i)],
+                  [para, span] = [...bet.children] as HTMLElement[]
+                  
+            para.textContent = `${betMoney}$`
+
+            span.onclick = (): void => {
+                if (!this.canRoll)
+                    return
+
+                for (const activeSpan of betSpans)
+                    activeSpan.className = ''
+
+                span.className = 'active'
+
+                this.currentBet = betMoney
+            }
+
+        }
+    }
+
+    public initMoney(): void {
+        const moneyCont: Element = document.querySelector('h1 span')!
+        
+        moneyCont.textContent = `${this.money}$`
+    }
+
+    public updateStatistics(): void {
+        const moneyContainer: HTMLElement = document.querySelector('h1')!.children[0] as HTMLElement
+
+        moneyContainer.textContent = `${this.money}$`
     }
 }
 

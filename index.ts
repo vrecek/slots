@@ -6,9 +6,19 @@ const handle: HTMLElement = document.querySelector('div.handle') as HTMLElement,
 
 
 handle.onclick = async (): Promise<void> => {
-    await GAME.rollHandler(handle)
-    console.log('rolled')
+    const shouldConinue: boolean = await GAME.rollHandler(handle)
+
+    if (!shouldConinue)
+        return
+
+        
+    const score = GAME.getCurrentScore()
+    GAME.calculateRoundResult(score)
+
+    GAME.updateStatistics()
 }
 
 GAME.initHandle(handle)
+GAME.initBets()
 GAME.initDivs()
+GAME.initMoney()
