@@ -8,9 +8,6 @@
 
 body {
 	font-family: 'AR One Sans', sans-serif;
-	background-image: url('/images/bg.jpeg');
-	background-size: cover;
-	background-position: 50% 50%;
 	color: #fff;
 	display: flex;
 	align-items: center;
@@ -18,6 +15,14 @@ body {
 	height: 100vh;
 	width: 100vw;
 	overflow: hidden;
+
+	div.bg {
+		position: absolute;
+		left: 0;
+		top: -25%;
+		z-index: -1;
+		width: 100%;
+	}
 
 	div.roll-result {
 		padding: 1em 3em;

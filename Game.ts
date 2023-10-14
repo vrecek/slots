@@ -14,12 +14,12 @@ class Game {
 
     public constructor() {
         this.imgs = [
-            "../images/img0.png",
-            "../images/img1.png",
-            "../images/img2.png",
-            "../images/img3.png",
-            "../images/img4.png",
-            "../images/img5.png",
+            "./images/img0.png",
+            "./images/img1.png",
+            "./images/img2.png",
+            "./images/img3.png",
+            "./images/img4.png",
+            "./images/img5.png",
         ]
 
         this.possibleBets = [100, 500, 1000]
@@ -162,7 +162,7 @@ class Game {
 
     public initHandle(handle: HTMLElement): void {
         const img: HTMLImageElement = document.createElement('img')
-        img.src = '../images/handle.png'
+        img.src = './images/handle.png'
 
         handle.appendChild(img)
     }
@@ -172,7 +172,7 @@ class Game {
 
         for (const [num, div] of Object.entries(initResult)) {
             const img: HTMLImageElement = document.createElement('img')
-            img.src = `../images/img${num}.png`
+            img.src = `./images/img${num}.png`
 
             div.appendChild(img)
         }
