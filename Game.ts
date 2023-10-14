@@ -60,8 +60,10 @@ class Game {
         document.querySelector('div.roll-result')?.remove()
 
         // Click animation
-        handle.style.transform = 'rotateX(-180deg)'
-        setTimeout(() => handle.style.transform = 'rotateX(0deg)', 200);
+        const handleImg: HTMLElement = handle.children[0] as HTMLElement
+        
+        handleImg.style.transform = 'rotateX(-180deg)'
+        setTimeout(() => handleImg.style.transform = 'rotateX(0deg)', 200);
 
         const wrapper: HTMLElement = document.querySelector('section.result-wrapper')!
         const MS: number = 50

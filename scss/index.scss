@@ -8,7 +8,9 @@
 
 body {
 	font-family: 'AR One Sans', sans-serif;
-	background: #303030;
+	background-image: url('/images/bg.jpeg');
+	background-size: cover;
+	background-position: 50% 50%;
 	color: #fff;
 	display: flex;
 	align-items: center;
@@ -98,11 +100,15 @@ body {
 			justify-content: center;
 
 			div.handle {
-				transition: .2s;
 				cursor: pointer;
+				background: #202020;
+				display: flex;
+				justify-content: center;
+				align-items: center;
 	
 				img {
 					width: 100%;
+					transition: .2s;
 				}
 			}
 		}
@@ -117,13 +123,15 @@ body {
 				width: inherit;
 				height: inherit;
 	
-				section.result,section.result2 {
+				section.result {
 					width: inherit;
 					height: inherit;
 					display: flex;
+					justify-content: center;
 	
 					div {
 						width: 33%;
+						max-width: 250px;
 						height: 100%;
 						display: flex;
 						padding: 1em;
@@ -134,6 +142,24 @@ body {
 							width: 100%;
 						}
 					}
+				}
+			}
+		}
+
+		@media (max-width: 1000px) {
+			min-width: auto;
+			width: 100%;
+
+			section.main-wrapper,
+			article.bet-article {
+				width: 100%;
+			}
+		}
+
+		@media (max-width: 480px) {
+			section.main-wrapper {
+				section.result-wrapper section.result div {
+					padding: .5em;
 				}
 			}
 		}
